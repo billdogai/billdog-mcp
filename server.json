@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.billdogai/billdog-mcp",
+  "title": "BillDog",
+  "description": "Set up and inspect app paywalls, subscriptions, offerings and analytics from your AI agent.",
+  "version": "1.1.0",
+  "websiteUrl": "https://billdog.io/docs/mcp-server",
+  "repository": {
+    "url": "https://github.com/billdogai/billdog-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.billdog.io/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional. Bearer bd_mcp_… key for clients without OAuth. Omit it to sign in with BillDog in the browser.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

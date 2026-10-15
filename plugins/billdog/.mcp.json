@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "billdog": {
+      "type": "http",
+      "url": "https://api.billdog.io/mcp"
+    }
+  }
+}

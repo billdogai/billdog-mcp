@@ -1,0 +1,33 @@
+# Smithery configuration — https://smithery.ai/docs
+#
+# BillDog is a hosted Streamable HTTP server at https://api.billdog.io/mcp.
+# The simplest listing is to add that URL on smithery.ai as an external server:
+# Smithery then reads the 45 tools from the server itself and the user signs in
+# with BillDog (OAuth). This file is for clients that launch servers locally:
+# it bridges stdio to the hosted server with mcp-remote.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      billdogMcpKey:
+        type: string
+        description: >-
+          Optional BillDog MCP key (starts with bd_mcp_), from
+          https://billdog.io/dashboard/analytics/api-keys. Leave empty to sign
+          in with BillDog in your browser instead. Keys are read-only; creating
+          or publishing configuration needs the sign-in.
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: [
+        '-y',
+        'mcp-remote',
+        'https://api.billdog.io/mcp',
+        ...(config.billdogMcpKey
+          ? ['--header', `Authorization: Bearer ${config.billdogMcpKey}`]
+          : []),
+      ],
+    })
+  exampleConfig:
+    billdogMcpKey: bd_mcp_0123456789abcdef0123456789abcdef0123456789abcdef

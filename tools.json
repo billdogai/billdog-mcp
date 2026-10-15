@@ -1,0 +1,276 @@
+{
+  "server": "https://api.billdog.io/mcp",
+  "count": 45,
+  "tools": [
+    {
+      "name": "get_setup_status",
+      "category": "Setup & diagnostics",
+      "access": "read",
+      "description": "Inspect the setup status of BillDog for this project. Returns an actionable checklist covering SDK keys, platform configuration, analytics ingestion, store credentials, products, entitlements, default offerings, and paywalls."
+    },
+    {
+      "name": "get_project",
+      "category": "Setup & diagnostics",
+      "access": "read",
+      "description": "Get project metadata including bundle ID, package name, and registered domains."
+    },
+    {
+      "name": "get_recent_sdk_activity",
+      "category": "Setup & diagnostics",
+      "access": "read",
+      "description": "Inspect recent SDK events and session replays received by BillDog to verify that your app integration is sending data."
+    },
+    {
+      "name": "resolve_placement_preview",
+      "category": "Setup & diagnostics",
+      "access": "read",
+      "description": "Dry-run preview of what a client SDK receives when resolving a placement. Returns the matched offering, packages, and assigned paywall."
+    },
+    {
+      "name": "run_analytics_query",
+      "category": "Analytics",
+      "access": "read",
+      "description": "Run a single analytics report. Returns a ReportResult envelope with columns + rows + optional totals. Available sources: events, revenue, cohorts, notifications, surveys, virtual_currency, subscriptions, paywalls, offerings, products, campaigns, experiments, journeys, customers. Available metrics: totals, timeseries, breakdown, funnel, retention, distribution, top_n, flow, compare, mrr_movement, ab_results, stickiness. Call discover_schema first if you need to know which (source, metric) pairings are supported. Reads production data unless sandbox is true; the result says which environment it read."
+    },
+    {
+      "name": "discover_schema",
+      "category": "Analytics",
+      "access": "read",
+      "description": "Return the full BillDog analytics schema \u2014 every (source, metric) pairing the project supports, with a 1-line description of what each returns. Call this once at the start of a session to know which combinations are valid."
+    },
+    {
+      "name": "list_event_names",
+      "category": "Analytics",
+      "access": "read",
+      "description": "List the event names this project received in the last `days` days (default 30), most frequent first, with each one's count and unique users. Useful when the user asks about an event by approximate name and you need the canonical one. Reads production data unless sandbox is true."
+    },
+    {
+      "name": "list_cohorts",
+      "category": "Analytics",
+      "access": "read",
+      "description": "List saved cohorts for this project. Each cohort has a definition (event-frequency / property / behavioral predicate) and a member_count. Pass a cohort id as the segment_id param to run_analytics_query to scope a report to that cohort."
+    },
+    {
+      "name": "list_saved_views",
+      "category": "Analytics",
+      "access": "read",
+      "description": "List saved analytics views for this project. Each view is a pre-configured report (path + filters + range). Use get_saved_view_results to replay one. Returns only views the API key's user can see (public to project, or owned by them)."
+    },
+    {
+      "name": "get_saved_view_results",
+      "category": "Analytics",
+      "access": "read",
+      "description": "Re-run a saved view and return its results. Equivalent to opening that report in the dashboard with the saved filters/range applied. Reads production data unless sandbox is true."
+    },
+    {
+      "name": "list_products",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "read",
+      "description": "List all products configured in this project's catalog, including their identifiers, product types, subscription durations, and store mapping IDs."
+    },
+    {
+      "name": "list_entitlements",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "read",
+      "description": "List all entitlements in this project and the product IDs associated with each entitlement."
+    },
+    {
+      "name": "list_offerings",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "read",
+      "description": "List all offerings in this project, showing their packages, attached products, and default/current status."
+    },
+    {
+      "name": "list_placements",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "read",
+      "description": "List all placements in this project, including access gating settings and linked offerings."
+    },
+    {
+      "name": "apply_setup_plan",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write \u00b7 publish",
+      "description": "Declaratively evaluate and execute a complete monetization catalog setup (products, entitlements, offerings, packages, placements). Defaults to dry_run: true for safe inspection of diffs and warnings before mutating. Set dry_run: false to commit."
+    },
+    {
+      "name": "create_product",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Create a new subscription or in-app product in the project catalog. Validates identifiers, duration, and store SKUs."
+    },
+    {
+      "name": "update_product",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Update metadata, store IDs, or display pricing for an existing product in this project."
+    },
+    {
+      "name": "create_entitlement",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Create a new entitlement in the catalog and optionally link it to products."
+    },
+    {
+      "name": "update_entitlement",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Update display name, description, or linked products for an existing entitlement."
+    },
+    {
+      "name": "set_entitlement_products",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Set the explicit list of product IDs granting an entitlement."
+    },
+    {
+      "name": "create_offering",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Create a new offering with packages. Created inactive/non-current by default."
+    },
+    {
+      "name": "manage_offering_packages",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Add or remove packages within an existing offering."
+    },
+    {
+      "name": "set_current_offering",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write \u00b7 publish",
+      "description": "Promote an offering to be the project current offering. Gated by 30-day live traffic check."
+    },
+    {
+      "name": "create_placement",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write",
+      "description": "Create a new placement in the project. Created unlinked by default."
+    },
+    {
+      "name": "link_placement",
+      "category": "Catalog: products, entitlements, offerings, placements",
+      "access": "write \u00b7 publish",
+      "description": "Link one or more offerings to a placement with priority order. Gated by 30-day live traffic check."
+    },
+    {
+      "name": "list_paywalls",
+      "category": "Paywalls",
+      "access": "read",
+      "description": "List all paywalls in this project, including active state, wall type, and publication timestamps."
+    },
+    {
+      "name": "get_paywall",
+      "category": "Paywalls",
+      "access": "read",
+      "description": "Get details and published layout configuration for a specific paywall in this project by UUID or identifier."
+    },
+    {
+      "name": "list_templates",
+      "category": "Paywalls",
+      "access": "read",
+      "description": "List available paywall and onboarding templates from the BillDog template catalog."
+    },
+    {
+      "name": "create_paywall_from_template",
+      "category": "Paywalls",
+      "access": "write",
+      "description": "Create a new paywall in the project from an existing template. Created as an inactive draft by default."
+    },
+    {
+      "name": "design_paywall",
+      "category": "Paywalls",
+      "access": "write",
+      "description": "Design and compile a paywall from an AI recipe or natural language prompt using the built-in compiler. Created as an inactive draft."
+    },
+    {
+      "name": "update_paywall",
+      "category": "Paywalls",
+      "access": "write",
+      "description": "Apply constrained patch updates to a draft paywall (copy, title, subtitle, CTA text, brand colors, offering binding). Refused on active paywalls to prevent live drift."
+    },
+    {
+      "name": "preview_paywall",
+      "category": "Paywalls",
+      "access": "read",
+      "description": "Evaluate paywall publish gate (validating components, bindings, offerings) and generate a secure short-lived preview link and token."
+    },
+    {
+      "name": "publish_paywall",
+      "category": "Paywalls",
+      "access": "write \u00b7 publish",
+      "description": "Publish a draft paywall to make it active for SDK delivery. Validates paywall before publishing and is gated by the 30-day live traffic check."
+    },
+    {
+      "name": "unpublish_paywall",
+      "category": "Paywalls",
+      "access": "write \u00b7 publish",
+      "description": "Deactivate an active paywall. Gated by the 30-day live traffic check."
+    },
+    {
+      "name": "list_projects",
+      "category": "Projects & SDK keys",
+      "access": "read",
+      "description": "List all BillDog projects accessible to the authenticated user, identifying the current active project, bundle ID, and platform."
+    },
+    {
+      "name": "create_project",
+      "category": "Projects & SDK keys",
+      "access": "write",
+      "description": "Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform."
+    },
+    {
+      "name": "create_public_sdk_key",
+      "category": "Projects & SDK keys",
+      "access": "write",
+      "description": "Generate a client-safe public SDK key (bd_public_live_... or bd_public_test_...) for mobile and web apps. Never mints secret keys."
+    },
+    {
+      "name": "list_surveys",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "read",
+      "description": "List all multi-page surveys and micro-survey walls configured for this project."
+    },
+    {
+      "name": "create_survey",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "write",
+      "description": "Create a survey in the project with custom questions (CSAT, NPS, rating, single-choice) or mobile display settings."
+    },
+    {
+      "name": "list_campaigns",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "read",
+      "description": "List all marketing and engagement campaigns configured for this project."
+    },
+    {
+      "name": "create_campaign",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "write",
+      "description": "Create a new campaign targeting user segments or in-app placements."
+    },
+    {
+      "name": "list_journeys",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "read",
+      "description": "List all customer onboarding and engagement journeys with their sequence of steps."
+    },
+    {
+      "name": "create_journey",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "write",
+      "description": "Create a multi-step user journey with triggers and custom actions."
+    },
+    {
+      "name": "list_message_templates",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "read",
+      "description": "List all in-app messaging modals/sheets and push notification templates."
+    },
+    {
+      "name": "create_message_template",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "write",
+      "description": "Create an in-app message template or push notification template."
+    }
+  ]
+}
