@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.1.0/plugin.schema.json",
+  "name": "billdog",
+  "version": "1.1.0",
+  "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, analytics, surveys and journeys. Includes the BillDog MCP server (45 tools, Sign in with BillDog) plus integration and competitor-migration skills.",
+  "author": {
+    "name": "BillDog",
+    "url": "https://billdog.io"
+  },
+  "homepage": "https://billdog.io/docs/mcp-server",
+  "repository": "https://github.com/billdogai/billdog-mcp",
+  "keywords": [
+    "paywalls",
+    "subscriptions",
+    "in-app-purchase",
+    "analytics",
+    "revenuecat",
+    "superwall",
+    "mcp"
+  ]
+}

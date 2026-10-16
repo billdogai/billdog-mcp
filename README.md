@@ -236,13 +236,20 @@ Machine-readable list: [`tools.json`](tools.json).
 
 ## Repository layout
 
+One plugin at the repository root, in two formats so every client can read it:
+
 ```
+plugin.json                       Agent Plugins / Open Plugins manifest (Cursor, cursor.directory, other clients)
+mcp.json                          Agent Plugins MCP config (streamable-http)
+skills/                           billdog-integration, billdog-migration (shared by both formats)
 .claude-plugin/marketplace.json   Claude Code marketplace (this repo)
-plugins/billdog/                  the plugin: .mcp.json + skills/
+.claude-plugin/plugin.json        Claude Code plugin manifest
+.mcp.json                         Claude Code MCP config
 server.json                       official MCP Registry entry
 smithery.yaml                     Smithery (stdio bridge via mcp-remote)
 glama.json                        Glama ownership claim
 tools.json                        all 45 tools, grouped, with access level
+assets/icon.png                   listing icon
 ```
 
 ## Links

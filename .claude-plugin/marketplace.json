@@ -11,12 +11,20 @@
   "plugins": [
     {
       "name": "billdog",
-      "source": "./plugins/billdog",
+      "source": "./",
       "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, analytics, surveys and journeys.",
       "version": "1.1.0",
       "category": "development",
       "homepage": "https://billdog.io/docs/mcp-server",
-      "keywords": ["paywalls", "subscriptions", "in-app-purchase", "analytics", "revenuecat", "superwall", "mcp"]
+      "keywords": [
+        "paywalls",
+        "subscriptions",
+        "in-app-purchase",
+        "analytics",
+        "revenuecat",
+        "superwall",
+        "mcp"
+      ]
     }
   ]
 }
