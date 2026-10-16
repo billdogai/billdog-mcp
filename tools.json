@@ -1,6 +1,6 @@
 {
   "server": "https://api.billdog.io/mcp",
-  "count": 45,
+  "count": 55,
   "tools": [
     {
       "name": "get_setup_status",
@@ -18,7 +18,7 @@
       "name": "get_recent_sdk_activity",
       "category": "Setup & diagnostics",
       "access": "read",
-      "description": "Inspect recent SDK events and session replays received by BillDog to verify that your app integration is sending data."
+      "description": "Is the app sending data? For the last window_hours (default 24): events by name, purchases and session replays, split into sandbox and production, with has_traffic for each."
     },
     {
       "name": "resolve_placement_preview",
@@ -36,7 +36,7 @@
       "name": "discover_schema",
       "category": "Analytics",
       "access": "read",
-      "description": "Return the full BillDog analytics schema \u2014 every (source, metric) pairing the project supports, with a 1-line description of what each returns. Call this once at the start of a session to know which combinations are valid."
+      "description": "Return the full BillDog analytics schema — every (source, metric) pairing the project supports, with a 1-line description of what each returns. Call this once at the start of a session to know which combinations are valid."
     },
     {
       "name": "list_event_names",
@@ -54,7 +54,7 @@
       "name": "list_saved_views",
       "category": "Analytics",
       "access": "read",
-      "description": "List saved analytics views for this project. Each view is a pre-configured report (path + filters + range). Use get_saved_view_results to replay one. Returns only views the API key's user can see (public to project, or owned by them)."
+      "description": "List saved analytics views for this project, each with what it asks (source, metric, dims, filters, date range, segment). Use get_saved_view_results to run one. Only views the user can see (shared with the project, or their own). pillar_id narrows to one area (revenue, product, surveys, …)."
     },
     {
       "name": "get_saved_view_results",
@@ -89,14 +89,14 @@
     {
       "name": "apply_setup_plan",
       "category": "Catalog: products, entitlements, offerings, placements",
-      "access": "write \u00b7 publish",
+      "access": "write · publish",
       "description": "Declaratively evaluate and execute a complete monetization catalog setup (products, entitlements, offerings, packages, placements). Defaults to dry_run: true for safe inspection of diffs and warnings before mutating. Set dry_run: false to commit."
     },
     {
       "name": "create_product",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Create a new subscription or in-app product in the project catalog. Validates identifiers, duration, and store SKUs."
+      "description": "Create a store product (subscription or in-app purchase) in the project catalog. A product can only be sold on a platform it has a store id for (app_store_product_id for Apple, play_store_product_id for Google, stripe_price_id for web); the result warns about any target platform missing one. If the identifier exists, nothing is changed (use update_product)."
     },
     {
       "name": "update_product",
@@ -114,13 +114,13 @@
       "name": "update_entitlement",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Update display name, description, or linked products for an existing entitlement."
+      "description": "Update display name, description, or linked products for an existing entitlement. product_ids REPLACES the list. On a live project, a change that removes a product (its buyers lose the entitlement) waits for an owner or admin to approve."
     },
     {
       "name": "set_entitlement_products",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Set the explicit list of product IDs granting an entitlement."
+      "description": "Set the explicit list of product IDs granting an entitlement (replaces the list; only the links that change are touched). On a live project, removing a product (its buyers lose the entitlement) waits for an owner or admin to approve."
     },
     {
       "name": "create_offering",
@@ -132,13 +132,13 @@
       "name": "manage_offering_packages",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Add or remove packages within an existing offering."
+      "description": "Add or remove packages within an existing offering. A new package goes after the last one unless position is given. If customers can reach the offering (it is current, linked to a placement, or a published paywall uses it) and the project is live, the change waits for an owner or admin to approve it (awaiting_approval, with an approve_url to pass on). Live means a production purchase, or 10+ production customers, in the last 30 days; sample projects never count."
     },
     {
       "name": "set_current_offering",
       "category": "Catalog: products, entitlements, offerings, placements",
-      "access": "write \u00b7 publish",
-      "description": "Promote an offering to be the project current offering. Gated by 30-day live traffic check."
+      "access": "write · publish",
+      "description": "Make an offering the project current offering (the others stop being current, atomically). On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
     },
     {
       "name": "create_placement",
@@ -149,8 +149,8 @@
     {
       "name": "link_placement",
       "category": "Catalog: products, entitlements, offerings, placements",
-      "access": "write \u00b7 publish",
-      "description": "Link one or more offerings to a placement with priority order. Gated by 30-day live traffic check."
+      "access": "write · publish",
+      "description": "Link one or more offerings to a placement with priority order (replaces its links). On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
     },
     {
       "name": "list_paywalls",
@@ -162,7 +162,7 @@
       "name": "get_paywall",
       "category": "Paywalls",
       "access": "read",
-      "description": "Get details and published layout configuration for a specific paywall in this project by UUID or identifier."
+      "description": "Get a paywall by UUID or identifier: status, layouts, offering, colours and copy_outline — every text and button with its component id, for update_paywall patch.copy. include_config returns the full draft and published configs (large)."
     },
     {
       "name": "list_templates",
@@ -180,13 +180,13 @@
       "name": "design_paywall",
       "category": "Paywalls",
       "access": "write",
-      "description": "Design and compile a paywall from an AI recipe or natural language prompt using the built-in compiler. Created as an inactive draft."
+      "description": "Design a paywall and save it as an inactive draft. Two ways: (1) pass `recipe`: you design it yourself — a compact layout (theme, presentation, body nodes such as text, icon, feature-list, products, button) that BillDog compiles into a native paywall. Its JSON schema is below; read the resource billdog://docs/paywall-recipe for the full language and design guidance. Uses no AI credit. If it does not compile, the error lists every problem; fix them and call again. (2) pass `prompt`: BillDog's AI designer (the same one as the dashboard's \"Generate with AI\") writes the recipe from your description and the project's offering and store listing. Uses one of the user's AI credits, charged only when a design compiles. Never write prices in text: the `products` node shows each package's real store price. Pass offering_id so the plan picker binds to that offering."
     },
     {
       "name": "update_paywall",
       "category": "Paywalls",
       "access": "write",
-      "description": "Apply constrained patch updates to a draft paywall (copy, title, subtitle, CTA text, brand colors, offering binding). Refused on active paywalls to prevent live drift."
+      "description": "Apply constrained patch updates to a paywall's draft (copy, title, subtitle, CTA text, brand colors, offering binding). On a published paywall this edits the draft only: users keep seeing the published version until publish_paywall."
     },
     {
       "name": "preview_paywall",
@@ -197,14 +197,68 @@
     {
       "name": "publish_paywall",
       "category": "Paywalls",
-      "access": "write \u00b7 publish",
-      "description": "Publish a draft paywall to make it active for SDK delivery. Validates paywall before publishing and is gated by the 30-day live traffic check."
+      "access": "write · publish",
+      "description": "Publish a draft paywall to make it active for SDK delivery. Validates paywall before publishing. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on. The approval publishes the draft as it was when you asked; edit it afterwards and you must ask again."
     },
     {
       "name": "unpublish_paywall",
       "category": "Paywalls",
-      "access": "write \u00b7 publish",
-      "description": "Deactivate an active paywall. Gated by the 30-day live traffic check."
+      "access": "write · publish",
+      "description": "Deactivate an active paywall. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
+    },
+    {
+      "name": "list_experiments",
+      "category": "Experiments & feature flags",
+      "access": "read",
+      "description": "List the project's experiments with their status, what devices are served now (variants, the shipped winner, or the control only), and each variant's paywall and traffic share."
+    },
+    {
+      "name": "create_experiment",
+      "category": "Experiments & feature flags",
+      "access": "write",
+      "description": "Create a paywall A/B experiment as a DRAFT: each variant shows a different paywall at the same place in the app. The first variant is the control unless one says is_control. Traffic splits evenly unless every variant gives traffic_percent (they must add up to 100). It serves nothing until start_experiment, and every paywall in it must be published first."
+    },
+    {
+      "name": "start_experiment",
+      "category": "Experiments & feature flags",
+      "access": "write · publish",
+      "description": "Start (or resume) an experiment: users who reach its paywall are split between the variants. Refused unless it has 2+ variants whose traffic adds up to 100, exactly one control, every paywall published, and no other running experiment on the same paywall. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) it waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
+    },
+    {
+      "name": "stop_experiment",
+      "category": "Experiments & feature flags",
+      "access": "write · publish",
+      "description": "Stop an experiment. mode \"pause\" (default) and \"end\" both send every user back to the control paywall; a paused one can be started again, an ended one cannot. mode \"ship_winner\" ends it and serves winner_variant_id to everyone (its traffic becomes 100%, the others are retired). Live projects need approval as for start_experiment."
+    },
+    {
+      "name": "get_experiment_results",
+      "category": "Experiments & feature flags",
+      "access": "read",
+      "description": "Per-variant results of an experiment for its whole run: users, conversions, conversion rate, revenue per user, lift vs control, p-value and significance (p < 0.05 with 100+ users per arm), plus a verdict: winner, loser, keep_running or no_data. Reads production unless sandbox is true."
+    },
+    {
+      "name": "list_feature_flags",
+      "category": "Experiments & feature flags",
+      "access": "read",
+      "description": "List the project's feature flags: key, on/off, rollout percentage, variants, and whether it has release conditions (audience rules, edited in the dashboard)."
+    },
+    {
+      "name": "create_feature_flag",
+      "category": "Experiments & feature flags",
+      "access": "write",
+      "description": "Create a feature flag, OFF: every user gets false until update_feature_flag turns it on. The app reads it by key. For a multivariate flag give variants (2+, rollout_percentage adding up to 100, optional JSON payload each)."
+    },
+    {
+      "name": "update_feature_flag",
+      "category": "Experiments & feature flags",
+      "access": "write · publish",
+      "description": "Turn a feature flag on (start) or off (stop), change its rollout percentage or variants, or rename it. Name it by flag_id or key. Turning it on needs a rollout_percentage above 0 (100 = everyone). A change to what users get, on a live project (a production purchase, or 10+ production customers, in the last 30 days), waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on. Editing a flag that stays off applies at once."
+    },
+    {
+      "name": "get_feature_flag_results",
+      "category": "Experiments & feature flags",
+      "access": "read",
+      "description": "How many users and evaluations got each value of a flag over the last N days (default 30, max 90), from the $feature_flag_called events the SDKs send. Name it by flag_id or key. Reads production unless sandbox is true."
     },
     {
       "name": "list_projects",
@@ -216,13 +270,19 @@
       "name": "create_project",
       "category": "Projects & SDK keys",
       "access": "write",
-      "description": "Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform."
+      "description": "Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform. With the \"Create projects\" permission (Sign in with BillDog), this connection then works in the new project: every other tool acts on it, and use_project switches back. Otherwise the connection stays on its current project and the result says how to reconnect — do not configure the new project until then. Check result.connection.switched."
     },
     {
       "name": "create_public_sdk_key",
       "category": "Projects & SDK keys",
       "access": "write",
       "description": "Generate a client-safe public SDK key (bd_public_live_... or bd_public_test_...) for mobile and web apps. Never mints secret keys."
+    },
+    {
+      "name": "use_project",
+      "category": "Projects & SDK keys",
+      "access": "write",
+      "description": "Switch this connection to another project it may use: the project chosen when it was connected, or one it created with create_project. Every other tool then acts on that project. list_projects marks which ones this connection can use (connection_can_use)."
     },
     {
       "name": "list_surveys",
@@ -234,7 +294,7 @@
       "name": "create_survey",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Create a survey in the project with custom questions (CSAT, NPS, rating, single-choice) or mobile display settings."
+      "description": "Save a survey as a DRAFT with its questions (activate it in the dashboard). Questions are checked as the dashboard checks them: a choice question needs choices, a rating needs maxRating ≥ 1, a link needs config.url."
     },
     {
       "name": "list_campaigns",
@@ -246,7 +306,7 @@
       "name": "create_campaign",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Create a new campaign targeting user segments or in-app placements."
+      "description": "Save a campaign as a DRAFT. It reaches no one until it has an audience and is activated in the dashboard."
     },
     {
       "name": "list_journeys",
@@ -258,19 +318,19 @@
       "name": "create_journey",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Create a multi-step user journey with triggers and custom actions."
+      "description": "Save a linear journey as a DRAFT (activate it in the dashboard; branches are built on its canvas). entry_trigger.trigger is one of: signup, app_open, paywall_presented, paywall_dismissed, paywall_purchased, trial_start, trial_ending, subscription_created, subscription_renewed, subscription_cancelled, subscription_expired, billing_issue, survey_completed, inactivity, segment_entered, or custom_event with event_name."
     },
     {
       "name": "list_message_templates",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "read",
-      "description": "List all in-app messaging modals/sheets and push notification templates."
+      "description": "List the project's message templates (push, in-app, email, SMS) with their title and body, as the dashboard Templates library shows them. Deleted templates are excluded."
     },
     {
       "name": "create_message_template",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Create an in-app message template or push notification template."
+      "description": "Save a reusable push or in-app message template (the same kind the dashboard Templates library shows). Use its id as template_id in a journey step."
     }
   ]
 }

@@ -5,7 +5,7 @@
 **Set up and inspect paywalls, subscriptions and analytics for your app — from your AI coding agent.**
 
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-6E56CF)](https://modelcontextprotocol.io)
-[![Tools](https://img.shields.io/badge/tools-45-2ea44f)](#tools)
+[![Tools](https://img.shields.io/badge/tools-55-2ea44f)](#tools)
 [![Auth](https://img.shields.io/badge/auth-OAuth%202.1%20%2B%20PKCE-0969da)](#sign-in-with-billdog)
 [![Docs](https://img.shields.io/badge/docs-billdog.io-black)](https://billdog.io/docs/mcp-server)
 
@@ -19,7 +19,7 @@
 
 [BillDog](https://billdog.io) is paywalls, in-app purchases, subscriptions, analytics, messaging, surveys and journeys behind one SDK for iOS, Android, React Native, Flutter, Expo and the web. This repository is how AI agents connect to it:
 
-- **A hosted MCP server.** 45 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
+- **A hosted MCP server.** 55 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
 - **A Claude Code plugin.** The server plus two skills: wiring the SDK into an app, and migrating from RevenueCat, Superwall, Adapty and others.
 
 Nothing runs on your machine. The server is hosted by BillDog and every client connects to the same URL.
@@ -128,7 +128,7 @@ claude mcp add --transport http billdog https://api.billdog.io/mcp \
 
 ## Tools
 
-**23 read** · **22 write** · *publish* means it changes what live users see and needs the publish permission.
+**27 read** · **28 write** · *publish* means it changes what live users see and needs the publish permission.
 Machine-readable list: [`tools.json`](tools.json).
 
 ### Setup & diagnostics
@@ -137,7 +137,7 @@ Machine-readable list: [`tools.json`](tools.json).
 |---|---|---|
 | `get_setup_status` | read | Inspect the setup status of BillDog for this project. |
 | `get_project` | read | Get project metadata including bundle ID, package name, and registered domains. |
-| `get_recent_sdk_activity` | read | Inspect recent SDK events and session replays received by BillDog to verify that your app integration is sending data. |
+| `get_recent_sdk_activity` | read | Is the app sending data? For the last window_hours (default 24): events by name, purchases and session replays, split into sandbox and production, with has_traffic for each. |
 | `resolve_placement_preview` | read | Dry-run preview of what a client SDK receives when resolving a placement. |
 
 ### Analytics
@@ -148,7 +148,7 @@ Machine-readable list: [`tools.json`](tools.json).
 | `discover_schema` | read | Return the full BillDog analytics schema — every (source, metric) pairing the project supports, with a 1-line description of what each returns. |
 | `list_event_names` | read | List the event names this project received in the last `days` days (default 30), most frequent first, with each one's count and unique users. |
 | `list_cohorts` | read | List saved cohorts for this project. |
-| `list_saved_views` | read | List saved analytics views for this project. |
+| `list_saved_views` | read | List saved analytics views for this project, each with what it asks (source, metric, dims, filters, date range, segment). |
 | `get_saved_view_results` | read | Re-run a saved view and return its results. |
 
 ### Catalog: products, entitlements, offerings, placements
@@ -160,30 +160,44 @@ Machine-readable list: [`tools.json`](tools.json).
 | `list_offerings` | read | List all offerings in this project, showing their packages, attached products, and default/current status. |
 | `list_placements` | read | List all placements in this project, including access gating settings and linked offerings. |
 | `apply_setup_plan` | write · publish | Declaratively evaluate and execute a complete monetization catalog setup (products, entitlements, offerings, packages, placements). |
-| `create_product` | write | Create a new subscription or in-app product in the project catalog. |
+| `create_product` | write | Create a store product (subscription or in-app purchase) in the project catalog. |
 | `update_product` | write | Update metadata, store IDs, or display pricing for an existing product in this project. |
 | `create_entitlement` | write | Create a new entitlement in the catalog and optionally link it to products. |
-| `update_entitlement` | write | Update display name, description, or linked products for an existing entitlement. |
-| `set_entitlement_products` | write | Set the explicit list of product IDs granting an entitlement. |
+| `update_entitlement` | write | Update display name, description, or linked products for an existing entitlement (product_ids replaces the list). |
+| `set_entitlement_products` | write | Set the explicit list of product IDs granting an entitlement (replaces the list; only the links that change are touched). |
 | `create_offering` | write | Create a new offering with packages. |
 | `manage_offering_packages` | write | Add or remove packages within an existing offering. |
-| `set_current_offering` | write · publish | Promote an offering to be the project current offering. |
+| `set_current_offering` | write · publish | Make an offering the project current offering (the others stop being current, atomically). |
 | `create_placement` | write | Create a new placement in the project. |
-| `link_placement` | write · publish | Link one or more offerings to a placement with priority order. |
+| `link_placement` | write · publish | Link one or more offerings to a placement with priority order (replaces its links). |
 
 ### Paywalls
 
 | Tool | Access | What it does |
 |---|---|---|
 | `list_paywalls` | read | List all paywalls in this project, including active state, wall type, and publication timestamps. |
-| `get_paywall` | read | Get details and published layout configuration for a specific paywall in this project by UUID or identifier. |
+| `get_paywall` | read | Get a paywall by UUID or identifier: status, layouts, offering, colours and copy_outline — every text and button with its component id, for update_paywall patch.copy. include_config returns the full draft and published configs (large). |
 | `list_templates` | read | List available paywall and onboarding templates from the BillDog template catalog. |
 | `create_paywall_from_template` | write | Create a new paywall in the project from an existing template. |
-| `design_paywall` | write | Design and compile a paywall from an AI recipe or natural language prompt using the built-in compiler. |
-| `update_paywall` | write | Apply constrained patch updates to a draft paywall (copy, title, subtitle, CTA text, brand colors, offering binding). |
+| `design_paywall` | write | Design a paywall and save it as an inactive draft. |
+| `update_paywall` | write | Apply constrained patch updates to a paywall's draft (copy, title, subtitle, CTA text, brand colors, offering binding). |
 | `preview_paywall` | read | Evaluate paywall publish gate (validating components, bindings, offerings) and generate a secure short-lived preview link and token. |
 | `publish_paywall` | write · publish | Publish a draft paywall to make it active for SDK delivery. |
 | `unpublish_paywall` | write · publish | Deactivate an active paywall. |
+
+### Experiments & feature flags
+
+| Tool | Access | What it does |
+|---|---|---|
+| `list_experiments` | read | List the project's experiments with their status, what devices are served now (variants, the shipped winner, or the control only), and each variant's paywall and traffic share. |
+| `create_experiment` | write | Create a paywall A/B experiment as a DRAFT: each variant shows a different paywall at the same place in the app. |
+| `start_experiment` | write · publish | Start (or resume) an experiment: users who reach its paywall are split between the variants. |
+| `stop_experiment` | write · publish | Stop an experiment: pause or end it (everyone sees the control paywall), or end it and ship the winning variant to everyone. |
+| `get_experiment_results` | read | Per-variant results of an experiment for its whole run: users, conversions, conversion rate, revenue per user, lift vs control, p-value and significance (p < 0.05 with 100+ users per arm), plus a verdict: winner, loser, keep_running or no_data. |
+| `list_feature_flags` | read | List the project's feature flags: key, on/off, rollout percentage, variants, and whether it has release conditions (audience rules, edited in the dashboard). |
+| `create_feature_flag` | write | Create a feature flag, OFF: every user gets false until update_feature_flag turns it on. |
+| `update_feature_flag` | write · publish | Turn a feature flag on (start) or off (stop), change its rollout percentage or variants, or rename it. |
+| `get_feature_flag_results` | read | How many users and evaluations got each value of a flag over the last N days (default 30, max 90), from the $feature_flag_called events the SDKs send. |
 
 ### Projects & SDK keys
 
@@ -191,21 +205,21 @@ Machine-readable list: [`tools.json`](tools.json).
 |---|---|---|
 | `list_projects` | read | List all BillDog projects accessible to the authenticated user, identifying the current active project, bundle ID, and platform. |
 | `create_project` | write | Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform. |
-| `create_public_sdk_key` | write | Generate a client-safe public SDK key (bd_public_live_... |
+| `create_public_sdk_key` | write | Generate a client-safe public SDK key (bd_public_live_... or bd_public_test_...) for mobile and web apps. |
+| `use_project` | write | Switch this connection to another project it may use: the project chosen when it was connected, or one it created with create_project. |
 
 ### Engagement: surveys, campaigns, journeys, messages
 
 | Tool | Access | What it does |
 |---|---|---|
 | `list_surveys` | read | List all multi-page surveys and micro-survey walls configured for this project. |
-| `create_survey` | write | Create a survey in the project with custom questions (CSAT, NPS, rating, single-choice) or mobile display settings. |
+| `create_survey` | write | Save a survey as a DRAFT with its questions (activate it in the dashboard). |
 | `list_campaigns` | read | List all marketing and engagement campaigns configured for this project. |
-| `create_campaign` | write | Create a new campaign targeting user segments or in-app placements. |
+| `create_campaign` | write | Save a campaign as a DRAFT. |
 | `list_journeys` | read | List all customer onboarding and engagement journeys with their sequence of steps. |
-| `create_journey` | write | Create a multi-step user journey with triggers and custom actions. |
-| `list_message_templates` | read | List all in-app messaging modals/sheets and push notification templates. |
-| `create_message_template` | write | Create an in-app message template or push notification template. |
-
+| `create_journey` | write | Save a linear journey as a DRAFT (activate it in the dashboard; branches are built on its canvas). |
+| `list_message_templates` | read | List the project's message templates (push, in-app, email, SMS) with their title and body, as the dashboard Templates library shows them. |
+| `create_message_template` | write | Save a reusable push or in-app message template (the same kind the dashboard Templates library shows). |
 ## Permissions & safety
 
 | Guarantee | How |
@@ -248,7 +262,7 @@ skills/                           billdog-integration, billdog-migration (shared
 server.json                       official MCP Registry entry
 smithery.yaml                     Smithery (stdio bridge via mcp-remote)
 glama.json                        Glama ownership claim
-tools.json                        all 45 tools, grouped, with access level
+tools.json                        all 55 tools, grouped, with access level
 assets/icon.png                   listing icon
 ```
 
