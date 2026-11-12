@@ -1,0 +1,27 @@
+{
+  "name": "billdog",
+  "version": "1.2.0",
+  "description": "Set up paywalls, subscriptions, A/B tests, feature flags and analytics for mobile and web apps from your agent, over the BillDog MCP server (Sign in with BillDog).",
+  "author": {
+    "name": "BillDog"
+  },
+  "homepage": "https://billdog.io/docs/mcp-server",
+  "repository": "https://github.com/billdogai/billdog-mcp",
+  "keywords": [
+    "paywalls",
+    "subscriptions",
+    "in-app-purchase",
+    "entitlements",
+    "feature-flags",
+    "ab-testing",
+    "analytics",
+    "mcp"
+  ],
+  "logo": "assets/logo.png",
+  "rules": "./rules/billdog.mdc",
+  "mcpServers": {
+    "billdog": {
+      "url": "https://api.billdog.io/mcp"
+    }
+  }
+}
