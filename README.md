@@ -233,10 +233,19 @@ Machine-readable list: [`tools.json`](tools.json).
 
 ## Claude Code plugin
 
-`/plugin install billdog@billdog` gives you the server plus two skills:
+`/plugin install billdog@billdog` gives you the server plus three skills:
 
 - **`billdog-integration`**: adds the SDK to an app (Web, React Native, Expo, iOS, Android) or diagnoses one that's already wired. It covers the identifier traps (`@billdog.io`, not `@billdog`; `io.billdog`, not `com.billdog`), configuration, placements and a verification checklist.
 - **`billdog-migration`**: moves an app off RevenueCat, Superwall, Adapty, Mixpanel, Amplitude, OneSignal, Braze, Typeform or SurveyMonkey. It covers both the code and the data.
+- **`billdog-experiments`**: runs paywall A/B experiments and feature flags: create, start, read results, ship the winner, roll a flag out.
+
+## Antigravity plugin
+
+```bash
+agy plugin install https://github.com/billdogai/billdog-mcp
+```
+
+Installs the server, the three skills above and an always-on rule (`rules/AGENTS.md`) that has the agent read your live project before writing identifiers into code and ask before anything goes live. The first BillDog tool call opens Sign in with BillDog. To try a local checkout, run `agy plugin validate --strict .` and `agy plugin install .` from the repository root.
 
 ## Troubleshooting
 
@@ -255,7 +264,7 @@ One plugin at the repository root, in two formats so every client can read it:
 ```
 plugin.json                       Agent Plugins / Open Plugins manifest (Cursor, cursor.directory, other clients)
 mcp.json                          Agent Plugins MCP config (streamable-http)
-skills/                           billdog-integration, billdog-migration (shared by both formats)
+skills/                           billdog-integration, billdog-migration, billdog-experiments (shared by every format)
 .claude-plugin/marketplace.json   Claude Code marketplace (this repo)
 .claude-plugin/plugin.json        Claude Code plugin manifest
 .mcp.json                         Claude Code MCP config
@@ -263,7 +272,11 @@ server.json                       official MCP Registry entry
 smithery.yaml                     Smithery (stdio bridge via mcp-remote)
 glama.json                        Glama ownership claim
 tools.json                        all 55 tools, grouped, with access level
+.antigravity-plugin/plugin.json   Antigravity plugin manifest (takes precedence over plugin.json in Antigravity)
+mcp_config.json                   Antigravity MCP config
+rules/AGENTS.md                   Antigravity always-on rule
 assets/icon.png                   listing icon
+assets/logo.png                   Antigravity logo (transparent background)
 ```
 
 ## Links
