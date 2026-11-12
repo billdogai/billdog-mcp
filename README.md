@@ -19,8 +19,8 @@
 
 [BillDog](https://billdog.io) is paywalls, in-app purchases, subscriptions, analytics, messaging, surveys and journeys behind one SDK for iOS, Android, React Native, Flutter, Expo and the web. This repository is how AI agents connect to it:
 
-- **A hosted MCP server.** 55 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
-- **A Claude Code plugin.** The server plus two skills: wiring the SDK into an app, and migrating from RevenueCat, Superwall, Adapty and others.
+- **A hosted MCP server.** 57 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
+- **Plugins for Claude Code, Cursor and Antigravity.** The server plus three skills: wiring the SDK into an app, paywall A/B experiments and feature flags, and migrating from RevenueCat, Superwall, Adapty and others.
 
 Nothing runs on your machine. The server is hosted by BillDog and every client connects to the same URL.
 
@@ -128,7 +128,7 @@ claude mcp add --transport http billdog https://api.billdog.io/mcp \
 
 ## Tools
 
-**27 read** · **28 write** · *publish* means it changes what live users see and needs the publish permission.
+**29 read** · **28 write** · *publish* means it changes what live users see and needs the publish permission.
 Machine-readable list: [`tools.json`](tools.json).
 
 ### Setup & diagnostics
@@ -139,6 +139,7 @@ Machine-readable list: [`tools.json`](tools.json).
 | `get_project` | read | Get project metadata including bundle ID, package name, and registered domains. |
 | `get_recent_sdk_activity` | read | Is the app sending data? For the last window_hours (default 24): events by name, purchases and session replays, split into sandbox and production, with has_traffic for each. |
 | `resolve_placement_preview` | read | Dry-run preview of what a client SDK receives when resolving a placement. |
+| `get_sdk_integration_guide` | read | Get the code to add BillDog to an app on one platform: iOS, Android, React Native, Flutter, Expo or web. |
 
 ### Analytics
 
@@ -184,6 +185,7 @@ Machine-readable list: [`tools.json`](tools.json).
 | `preview_paywall` | read | Evaluate paywall publish gate (validating components, bindings, offerings) and generate a secure short-lived preview link and token. |
 | `publish_paywall` | write · publish | Publish a draft paywall to make it active for SDK delivery. |
 | `unpublish_paywall` | write · publish | Deactivate an active paywall. |
+| `get_paywall_recipe_guide` | read | Get the full guide to writing a design_paywall `recipe`: every node type and its fields, theme tokens, icons, dynamic price values, layout and design advice. |
 
 ### Experiments & feature flags
 
@@ -277,7 +279,7 @@ skills/                           billdog-integration, billdog-migration, billdo
 server.json                       official MCP Registry entry
 smithery.yaml                     Smithery (stdio bridge via mcp-remote)
 glama.json                        Glama ownership claim
-tools.json                        all 55 tools, grouped, with access level
+tools.json                        all 57 tools, grouped, with access level
 .antigravity-plugin/plugin.json   Antigravity plugin manifest (takes precedence over plugin.json in Antigravity)
 mcp_config.json                   Antigravity MCP config
 rules/AGENTS.md                   Antigravity always-on rule
