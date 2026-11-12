@@ -241,7 +241,7 @@ Machine-readable list: [`tools.json`](tools.json).
 
 ## Cursor plugin
 
-The Cursor manifest is `.cursor-plugin/plugin.json`: the server, the three skills above and an always-on rule (`rules/billdog.mdc`). To try a local checkout, copy or link the repository into `~/.cursor/plugins/local/billdog` and run *Developer: Reload Window*.
+The Cursor manifest is `.cursor-plugin/plugin.json`: the server, the three skills above and an always-on rule (`.cursor-plugin/rules/billdog.mdc`). To try a local checkout, copy or link the repository into `~/.cursor/plugins/local/billdog` and run *Developer: Reload Window*.
 
 ## Antigravity plugin
 
@@ -267,7 +267,7 @@ One plugin at the repository root, in two formats so every client can read it:
 
 ```
 .cursor-plugin/plugin.json        Cursor plugin manifest (Cursor Marketplace)
-rules/billdog.mdc                 Cursor always-on rule
+.cursor-plugin/rules/billdog.mdc  Cursor always-on rule
 plugin.json                       Agent Plugins 1.0.0 manifest (cursor.directory, other clients)
 mcp.json                          Agent Plugins 1.0.0 MCP config (streamable-http)
 skills/                           billdog-integration, billdog-migration, billdog-experiments (shared by every format)
