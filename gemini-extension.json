@@ -1,0 +1,10 @@
+{
+  "name": "billdog",
+  "version": "1.2.0",
+  "description": "Set up paywalls, subscriptions, A/B tests, feature flags and analytics for mobile and web apps from your agent, over the BillDog MCP server (Sign in with BillDog).",
+  "mcpServers": {
+    "billdog": {
+      "httpUrl": "https://api.billdog.io/mcp"
+    }
+  }
+}
