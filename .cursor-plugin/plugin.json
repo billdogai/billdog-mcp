@@ -18,7 +18,7 @@
     "mcp"
   ],
   "logo": "assets/logo.png",
-  "rules": "./rules/billdog.mdc",
+  "rules": "./.cursor-plugin/rules/billdog.mdc",
   "mcpServers": {
     "billdog": {
       "url": "https://api.billdog.io/mcp"
