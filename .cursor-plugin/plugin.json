@@ -7,6 +7,7 @@
   },
   "homepage": "https://billdog.io/docs/mcp-server",
   "repository": "https://github.com/billdogai/billdog-mcp",
+  "license": "MIT",
   "keywords": [
     "paywalls",
     "subscriptions",
