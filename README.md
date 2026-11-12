@@ -239,6 +239,10 @@ Machine-readable list: [`tools.json`](tools.json).
 - **`billdog-migration`**: moves an app off RevenueCat, Superwall, Adapty, Mixpanel, Amplitude, OneSignal, Braze, Typeform or SurveyMonkey. It covers both the code and the data.
 - **`billdog-experiments`**: runs paywall A/B experiments and feature flags: create, start, read results, ship the winner, roll a flag out.
 
+## Cursor plugin
+
+The Cursor manifest is `.cursor-plugin/plugin.json`: the server, the three skills above and an always-on rule (`rules/billdog.mdc`). To try a local checkout, copy or link the repository into `~/.cursor/plugins/local/billdog` and run *Developer: Reload Window*.
+
 ## Antigravity plugin
 
 ```bash
@@ -262,8 +266,10 @@ Installs the server, the three skills above and an always-on rule (`rules/AGENTS
 One plugin at the repository root, in two formats so every client can read it:
 
 ```
-plugin.json                       Agent Plugins / Open Plugins manifest (Cursor, cursor.directory, other clients)
-mcp.json                          Agent Plugins MCP config (streamable-http)
+.cursor-plugin/plugin.json        Cursor plugin manifest (Cursor Marketplace)
+rules/billdog.mdc                 Cursor always-on rule
+plugin.json                       Agent Plugins 1.0.0 manifest (cursor.directory, other clients)
+mcp.json                          Agent Plugins 1.0.0 MCP config (streamable-http)
 skills/                           billdog-integration, billdog-migration, billdog-experiments (shared by every format)
 .claude-plugin/marketplace.json   Claude Code marketplace (this repo)
 .claude-plugin/plugin.json        Claude Code plugin manifest

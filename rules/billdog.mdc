@@ -1,0 +1,19 @@
+---
+description: How to work with a BillDog project over the billdog MCP server
+alwaysApply: true
+---
+
+# BillDog
+
+- Read the live BillDog project over the `billdog` MCP server before you write a
+  product id, entitlement key, offering id, placement identifier or feature-flag
+  key into code. Use the identifier the project actually has; never guess one.
+- New BillDog items start as drafts or inactive. Publishing a paywall, starting
+  or stopping an experiment, turning a feature flag on or changing its rollout,
+  and changing a live offering all change what real app users see. Ask the user
+  before each of these.
+- Queries read production data unless you pass `sandbox: true`. If a production
+  read comes back empty, the project may only have sandbox data so far: retry
+  with `sandbox: true` and tell the user which environment the numbers came from.
+- Put only a public SDK key in client code, never a secret key, and never commit
+  a key.
