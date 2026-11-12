@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "billdog",
   "version": "1.1.0",
-  "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, analytics, surveys and journeys. Includes the BillDog MCP server (45 tools, Sign in with BillDog) plus integration and competitor-migration skills.",
+  "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, experiments, feature flags, analytics, surveys and journeys. Includes the BillDog MCP server (57 tools, Sign in with BillDog) and three skills: SDK integration, experiments and feature flags, and competitor migration.",
   "author": {
     "name": "BillDog",
     "url": "https://billdog.io"

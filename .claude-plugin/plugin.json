@@ -1,6 +1,6 @@
 {
   "name": "billdog",
-  "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, analytics, surveys and journeys. Includes an integration skill, a competitor-migration skill and the BillDog MCP server (45 tools, Sign in with BillDog).",
+  "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, experiments, feature flags, analytics, surveys and journeys. Includes the BillDog MCP server (57 tools, Sign in with BillDog) and three skills: SDK integration, experiments and feature flags, and competitor migration.",
   "version": "1.1.0",
   "author": {
     "name": "BillDog",

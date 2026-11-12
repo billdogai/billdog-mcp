@@ -1,6 +1,6 @@
 {
   "server": "https://api.billdog.io/mcp",
-  "count": 55,
+  "count": 57,
   "tools": [
     {
       "name": "get_setup_status",
@@ -25,6 +25,12 @@
       "category": "Setup & diagnostics",
       "access": "read",
       "description": "Dry-run preview of what a client SDK receives when resolving a placement. Returns the matched offering, packages, and assigned paywall."
+    },
+    {
+      "name": "get_sdk_integration_guide",
+      "category": "Setup & diagnostics",
+      "access": "read",
+      "description": "Use this when adding BillDog to an iOS, Android, React Native, Flutter, Expo or web app, for paywalls, in-app purchases or analytics. Get the code to add BillDog to an app on one platform: a setup snippet carrying this project's public SDK key, and the guide to installing the SDK, identifying the signed-in user, showing a paywall, buying and restoring. Give the user this code rather than writing BillDog SDK calls from memory. If the snippet shows a placeholder, the project has no public key yet: create_public_sdk_key makes one."
     },
     {
       "name": "run_analytics_query",
@@ -205,6 +211,12 @@
       "category": "Paywalls",
       "access": "write · publish",
       "description": "Deactivate an active paywall. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
+    },
+    {
+      "name": "get_paywall_recipe_guide",
+      "category": "Paywalls",
+      "access": "read",
+      "description": "Get the full guide to writing a design_paywall `recipe`: every node type and its fields, theme tokens, icons, dynamic price values, layout and design advice."
     },
     {
       "name": "list_experiments",
