@@ -1,0 +1,29 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "billdog",
+  "displayName": "BillDog",
+  "version": "1.2.0",
+  "description": "Set up paywalls, subscriptions, A/B tests, feature flags and analytics for mobile and web apps from your agent, over the BillDog MCP server.",
+  "logo": "assets/logo.png",
+  "suggestedPrompts": [
+    "Check my BillDog project setup and tell me what is missing",
+    "Add BillDog to this app and show a paywall at a placement",
+    "Set up a paywall A/B test in BillDog and read its results"
+  ],
+  "author": {
+    "name": "BillDog",
+    "url": "https://billdog.io"
+  },
+  "homepage": "https://billdog.io/docs/mcp-server",
+  "repository": "https://github.com/billdogai/billdog-mcp",
+  "keywords": [
+    "paywalls",
+    "subscriptions",
+    "in-app-purchase",
+    "entitlements",
+    "feature-flags",
+    "ab-testing",
+    "analytics",
+    "mcp"
+  ]
+}
