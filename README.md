@@ -2,7 +2,7 @@
 
 # 🐶 BillDog MCP Server
 
-**Set up and inspect paywalls, subscriptions and analytics for your app — from your AI coding agent.**
+**Set up and inspect [BillDog](https://billdog.io) paywalls, subscriptions and analytics for your app — from your AI coding agent.**
 
 [![MCP](https://img.shields.io/badge/MCP-Streamable%20HTTP-6E56CF)](https://modelcontextprotocol.io)
 [![Tools](https://img.shields.io/badge/tools-55-2ea44f)](#tools)
@@ -297,8 +297,26 @@ assets/icon.png                   listing icon
 assets/logo.png                   Antigravity logo (transparent background)
 ```
 
+## Use BillDog in your app
+
+The MCP server configures BillDog; your app talks to it through an SDK.
+
+| Platform | Package | Docs |
+|---|---|---|
+| iOS (Swift) | [billdog-ios-spm](https://github.com/billdogai/billdog-ios-spm) | [iOS guide](https://billdog.io/docs/ios) |
+| Android (Kotlin) | [billdog-android-full](https://github.com/billdogai/billdog-android-full) · [billdog-android-eng](https://github.com/billdogai/billdog-android-eng) | [Android guide](https://billdog.io/docs/android) |
+| React Native · Flutter · Web | npm · pub.dev | [React Native](https://billdog.io/docs/react-native) · [Flutter](https://billdog.io/docs/flutter) · [Web](https://billdog.io/docs/web) |
+| Superwall bridge (iOS) | [billdog-ios-superwall](https://github.com/billdogai/billdog-ios-superwall) | [Superwall integration](https://billdog.io/docs/superwall-integration) |
+| Server (Go, PHP, Node, Python…) | [billdogeng-go](https://github.com/billdogai/billdogeng-go) · [billdogeng-php](https://github.com/billdogai/billdogeng-php) | [Server SDKs](https://billdog.io/docs/server-sdk) |
+
+Not sure which one you need? See [choosing an SDK](https://billdog.io/docs/sdk-selection).
+
 ## Links
 
+- 🌐 Website: [billdog.io](https://billdog.io) — paywalls, subscriptions, analytics and experiments for mobile and web apps
 - 📖 Docs: [billdog.io/docs/mcp-server](https://billdog.io/docs/mcp-server)
+- 🧱 Paywall builder: [billdog.io/docs/paywall-builder](https://billdog.io/docs/paywall-builder)
+- 🧪 A/B experiments: [billdog.io/docs/experiments](https://billdog.io/docs/experiments)
+- 📊 Product analytics: [billdog.io/docs/product-analytics](https://billdog.io/docs/product-analytics)
 - 🧭 Full SDK reference for agents: [billdog.io/SKILL.md](https://billdog.io/SKILL.md)
 - 🐛 Issues: [github.com/billdogai/billdog-mcp/issues](https://github.com/billdogai/billdog-mcp/issues)
