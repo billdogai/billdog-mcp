@@ -20,7 +20,7 @@
 [BillDog](https://billdog.io) is paywalls, in-app purchases, subscriptions, analytics, messaging, surveys and journeys behind one SDK for iOS, Android, React Native, Flutter, Expo and the web. This repository is how AI agents connect to it:
 
 - **A hosted MCP server.** 57 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
-- **Plugins for Claude Code, Cursor and Antigravity.** The server plus four skills: wiring the SDK into an app, paywall A/B experiments and feature flags, revenue and conversion analysis, and migrating from RevenueCat, Superwall, Adapty and others.
+- **Plugins for Claude Code, Cursor and Antigravity.** The server plus five skills: wiring the SDK into an app, custom (headless) paywall UI, paywall A/B experiments and feature flags, revenue and conversion analysis, and migrating from RevenueCat, Superwall, Adapty and others.
 
 Nothing runs on your machine. The server is hosted by BillDog and every client connects to the same URL.
 
@@ -235,16 +235,17 @@ Machine-readable list: [`tools.json`](tools.json).
 
 ## Claude Code plugin
 
-`/plugin install billdog@billdog` gives you the server plus four skills:
+`/plugin install billdog@billdog` gives you the server plus five skills:
 
 - **`billdog-integration`**: adds the SDK to an app (Web, React Native, Expo, iOS, Android) or diagnoses one that's already wired. It covers the identifier traps (`@billdog.io`, not `@billdog`; `io.billdog`, not `com.billdog`), configuration, placements and a verification checklist.
 - **`billdog-migration`**: moves an app off RevenueCat, Superwall, Adapty, Mixpanel, Amplitude, OneSignal, Braze, Typeform or SurveyMonkey. It covers both the code and the data.
 - **`billdog-experiments`**: runs paywall A/B experiments and feature flags: create, start, read results, ship the winner, roll a flag out.
+- **`billdog-headless`**: builds a custom paywall screen in the app's own UI (SwiftUI, Compose, React Native, Expo, Flutter, web) or a game engine over REST: fetch the placement's offering, handle holdout, withheld and gated results, buy, and track impressions.
 - **`billdog-analyst`**: answers questions about the project's numbers (revenue, MRR, churn, renewals, trial conversion, LTV, paywall and placement conversion, funnels), picking the right report and reading it without the usual traps. Read-only.
 
 ## Cursor plugin
 
-The Cursor manifest is `.cursor-plugin/plugin.json`: the server, the four skills above and an always-on rule (`.cursor-plugin/rules/billdog.mdc`). To try a local checkout, copy or link the repository into `~/.cursor/plugins/local/billdog` and run *Developer: Reload Window*.
+The Cursor manifest is `.cursor-plugin/plugin.json`: the server, the five skills above and an always-on rule (`.cursor-plugin/rules/billdog.mdc`). To try a local checkout, copy or link the repository into `~/.cursor/plugins/local/billdog` and run *Developer: Reload Window*.
 
 ## Gemini CLI extension
 
@@ -252,7 +253,7 @@ The Cursor manifest is `.cursor-plugin/plugin.json`: the server, the four skills
 gemini extensions install https://github.com/billdogai/billdog-mcp
 ```
 
-`gemini-extension.json` adds the server over Streamable HTTP; the first BillDog tool call opens Sign in with BillDog. The four skills in `skills/` load with it.
+`gemini-extension.json` adds the server over Streamable HTTP; the first BillDog tool call opens Sign in with BillDog. The five skills in `skills/` load with it.
 
 ## Antigravity plugin
 
@@ -260,7 +261,7 @@ gemini extensions install https://github.com/billdogai/billdog-mcp
 agy plugin install https://github.com/billdogai/billdog-mcp
 ```
 
-Installs the server, the four skills above and an always-on rule (`rules/AGENTS.md`) that has the agent read your live project before writing identifiers into code and ask before anything goes live. The first BillDog tool call opens Sign in with BillDog. To try a local checkout, run `agy plugin validate --strict .` and `agy plugin install .` from the repository root.
+Installs the server, the five skills above and an always-on rule (`rules/AGENTS.md`) that has the agent read your live project before writing identifiers into code and ask before anything goes live. The first BillDog tool call opens Sign in with BillDog. To try a local checkout, run `agy plugin validate --strict .` and `agy plugin install .` from the repository root.
 
 ## Troubleshooting
 
@@ -282,7 +283,7 @@ gemini-extension.json             Gemini CLI extension manifest
 .cursor-plugin/rules/billdog.mdc  Cursor always-on rule
 plugin.json                       Agent Plugins 1.0.0 manifest (cursor.directory, other clients)
 mcp.json                          Agent Plugins 1.0.0 MCP config (streamable-http)
-skills/                           billdog-integration, billdog-migration, billdog-experiments, billdog-analyst (shared by every format)
+skills/                           billdog-integration, billdog-migration, billdog-experiments, billdog-analyst, billdog-headless (shared by every format)
 .claude-plugin/marketplace.json   Claude Code marketplace (this repo)
 .claude-plugin/plugin.json        Claude Code plugin manifest
 .mcp.json                         Claude Code MCP config
