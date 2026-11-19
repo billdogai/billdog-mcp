@@ -19,7 +19,7 @@
 
 [BillDog](https://billdog.io) is paywalls, in-app purchases, subscriptions, analytics, messaging, surveys and journeys behind one SDK for iOS, Android, React Native, Flutter, Expo and the web. This repository is how AI agents connect to it:
 
-- **A hosted MCP server.** 57 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
+- **A hosted MCP server.** 59 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
 - **Plugins for Claude Code, Cursor and Antigravity.** The server plus five skills: wiring the SDK into an app, custom (headless) paywall UI, paywall A/B experiments and feature flags, revenue and conversion analysis, and migrating from RevenueCat, Superwall, Adapty and others.
 
 Nothing runs on your machine. The server is hosted by BillDog and every client connects to the same URL.
@@ -219,7 +219,9 @@ Machine-readable list: [`tools.json`](tools.json).
 | `list_campaigns` | read | List all marketing and engagement campaigns configured for this project. |
 | `create_campaign` | write | Save a campaign as a DRAFT. |
 | `list_journeys` | read | List all customer onboarding and engagement journeys with their sequence of steps. |
-| `create_journey` | write | Save a linear journey as a DRAFT (activate it in the dashboard; branches are built on its canvas). |
+| `create_journey` | write | Save a linear journey as a DRAFT (activate it with activate_journey or in the dashboard; branches are built on its canvas). |
+| `activate_journey` | write · publish | Activate a draft or paused journey so new matching events enroll customers. On a live project it files an approval request for an owner or admin instead. |
+| `pause_journey` | write | Pause an active journey: nobody new enters, and people already in it are held where they are. Never needs approval. |
 | `list_message_templates` | read | List the project's message templates (push, in-app, email, SMS) with their title and body, as the dashboard Templates library shows them. |
 | `create_message_template` | write | Save a reusable push or in-app message template (the same kind the dashboard Templates library shows). |
 ## Permissions & safety
@@ -228,7 +230,7 @@ Machine-readable list: [`tools.json`](tools.json).
 |---|---|
 | **One project per connection** | The project is fixed by your sign-in or key. Project ids in tool arguments are ignored, so the agent can't read another project. |
 | **You choose the access** | On the consent screen: read only, read + create/edit, or read + create/edit + publish. Keys are always read-only. |
-| **Nothing goes live by accident** | New products, offerings, placements and paywalls start inactive or as drafts. Publishing, setting the current offering and linking a placement with live traffic need the publish permission. |
+| **Nothing goes live by accident** | New products, offerings, placements and paywalls start inactive or as drafts. Publishing, starting experiments, activating journeys, setting the current offering and linking a placement with live traffic need the publish permission. |
 | **No customer contact data** | Email, phone, display name and custom attributes are withheld from every response, and the response says so. |
 | **Audited** | Every write is recorded in the project's audit log, attributed to the agent and the user who connected it. |
 | **Revocable** | Disconnect an agent, or revoke a key, from the dashboard at any time. |
@@ -290,7 +292,7 @@ skills/                           billdog-integration, billdog-migration, billdo
 server.json                       official MCP Registry entry
 smithery.yaml                     Smithery (stdio bridge via mcp-remote)
 glama.json                        Glama ownership claim
-tools.json                        all 57 tools, grouped, with access level
+tools.json                        all 59 tools, grouped, with access level
 .antigravity-plugin/plugin.json   Antigravity plugin manifest (takes precedence over plugin.json in Antigravity)
 mcp_config.json                   Antigravity MCP config
 rules/AGENTS.md                   Antigravity always-on rule

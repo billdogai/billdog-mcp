@@ -1,12 +1,12 @@
 {
   "server": "https://api.billdog.io/mcp",
-  "count": 57,
+  "count": 59,
   "tools": [
     {
       "name": "get_setup_status",
       "category": "Setup & diagnostics",
       "access": "read",
-      "description": "Inspect the setup status of BillDog for this project. Returns an actionable checklist covering SDK keys, platform configuration, analytics ingestion, store credentials, products, entitlements, default offerings, and paywalls."
+      "description": "Use this when a paywall, in-app purchase or subscription integration is not working, or to see what is left to set up. Inspect the setup status of BillDog for this project. Returns an actionable checklist covering SDK keys, platform configuration, analytics ingestion, store credentials, products, entitlements, default offerings, and paywalls."
     },
     {
       "name": "get_project",
@@ -18,13 +18,13 @@
       "name": "get_recent_sdk_activity",
       "category": "Setup & diagnostics",
       "access": "read",
-      "description": "Is the app sending data? For the last window_hours (default 24): events by name, purchases and session replays, split into sandbox and production, with has_traffic for each."
+      "description": "Use this to check whether an iOS, Android, React Native, Flutter, Expo or web app is sending events and purchases to BillDog. Is the app sending data? For the last window_hours (default 24): events by name, purchases and session replays, split into sandbox and production, with has_traffic for each."
     },
     {
       "name": "resolve_placement_preview",
       "category": "Setup & diagnostics",
       "access": "read",
-      "description": "Dry-run preview of what a client SDK receives when resolving a placement. Returns the matched offering, packages, and assigned paywall."
+      "description": "Use this to debug which paywall and offering an app will show at a placement. Dry-run preview of what a client SDK receives when resolving a placement: an active campaign first (a holdout serves nothing), else the offering linked to the placement, else nothing. Returns served_by, the matched offering, packages, and assigned paywall, plus any running or shipped experiment on that paywall (`experiments`, with each arm's traffic and paywall): while one runs, assigned_paywall is only what its control sees."
     },
     {
       "name": "get_sdk_integration_guide",
@@ -36,7 +36,7 @@
       "name": "run_analytics_query",
       "category": "Analytics",
       "access": "read",
-      "description": "Run a single analytics report. Returns a ReportResult envelope with columns + rows + optional totals. Available sources: events, revenue, cohorts, notifications, surveys, virtual_currency, subscriptions, paywalls, offerings, products, campaigns, experiments, journeys, customers. Available metrics: totals, timeseries, breakdown, funnel, retention, distribution, top_n, flow, compare, mrr_movement, ab_results, stickiness. Call discover_schema first if you need to know which (source, metric) pairings are supported. Reads production data unless sandbox is true; the result says which environment it read."
+      "description": "Use this for subscription analytics and mobile app analytics in the connected project: revenue, MRR movement, churn, active subscriptions, retention, funnels and paywall conversion. Run a single analytics report. Returns a ReportResult envelope with columns + rows + optional totals. Properties named like personal data (email, phone, name, token) are refused and email addresses in results are hidden. Available sources: events, revenue, cohorts, notifications, surveys, virtual_currency, subscriptions, paywalls, offerings, products, campaigns, experiments, journeys, customers, subscription_cohorts, subscription_charts (filters.chart: arppu | renewal_rate | billing_issues | plan_changes), revenue_segments (ledger revenue by country/store/platform/product/offering/paywall/placement/experiment arm). Available metrics: totals, timeseries, breakdown, funnel, retention, distribution, top_n, flow, compare, mrr_movement, ab_results, stickiness, ltv_prediction. Call discover_schema first if you need to know which (source, metric) pairings are supported. Reads production data unless sandbox is true; the result says which environment it read."
     },
     {
       "name": "discover_schema",
@@ -72,7 +72,7 @@
       "name": "list_products",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "read",
-      "description": "List all products configured in this project's catalog, including their identifiers, product types, subscription durations, and store mapping IDs."
+      "description": "Use this to see the in-app purchases and subscriptions set up for an app. List all products configured in this project's catalog, including their identifiers, product types, subscription durations, and store mapping IDs."
     },
     {
       "name": "list_entitlements",
@@ -96,19 +96,19 @@
       "name": "apply_setup_plan",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write · publish",
-      "description": "Declaratively evaluate and execute a complete monetization catalog setup (products, entitlements, offerings, packages, placements). Defaults to dry_run: true for safe inspection of diffs and warnings before mutating. Set dry_run: false to commit."
+      "description": "Use this to set up a whole in-app purchase and subscription catalog in one step. Declaratively evaluate and execute a complete monetization catalog setup (products, entitlements, offerings, packages, placements). Defaults to dry_run: true for safe inspection of diffs and warnings before mutating. Set dry_run: false to commit."
     },
     {
       "name": "create_product",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Create a store product (subscription or in-app purchase) in the project catalog. A product can only be sold on a platform it has a store id for (app_store_product_id for Apple, play_store_product_id for Google, stripe_price_id for web); the result warns about any target platform missing one. If the identifier exists, nothing is changed (use update_product)."
+      "description": "Use this to add an in-app purchase or subscription from App Store Connect, Google Play or Stripe. Create a store product (subscription or in-app purchase) in the project catalog. A product can only be sold on a platform it has a store id for (app_store_product_id for Apple, play_store_product_id for Google, stripe_price_id for web); the result warns about any target platform missing one. If the identifier exists, nothing is changed (use update_product)."
     },
     {
       "name": "update_product",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Update metadata, store IDs, or display pricing for an existing product in this project."
+      "description": "Update metadata, store IDs, or display pricing for an existing product in this project. On a live project (a production purchase, or 10+ production customers, in the last 30 days) the change is not applied: it becomes an approval request for a project owner or admin, and the result carries the approval link."
     },
     {
       "name": "create_entitlement",
@@ -138,7 +138,7 @@
       "name": "manage_offering_packages",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Add or remove packages within an existing offering. A new package goes after the last one unless position is given. If customers can reach the offering (it is current, linked to a placement, or a published paywall uses it) and the project is live, the change waits for an owner or admin to approve it (awaiting_approval, with an approve_url to pass on). Live means a production purchase, or 10+ production customers, in the last 30 days; sample projects never count."
+      "description": "Add or remove packages within an existing offering. A new package goes after the last one unless position is given. action \"retype\" changes a package's package_type (package_id + package_type), e.g. a monthly plan stored as \"custom\", which offering.monthly cannot see. If customers can reach the offering (it is current, linked to a placement, or a published paywall uses it) and the project is live, the change waits for an owner or admin to approve it (awaiting_approval, with an approve_url to pass on). Live means a production purchase, or 10+ production customers, in the last 30 days; sample projects never count."
     },
     {
       "name": "set_current_offering",
@@ -162,55 +162,55 @@
       "name": "list_paywalls",
       "category": "Paywalls",
       "access": "read",
-      "description": "List all paywalls in this project, including active state, wall type, and publication timestamps."
+      "description": "Use this to see the mobile app paywalls in the connected project. List all paywalls in this project, including active state, wall type, and publication timestamps."
     },
     {
       "name": "get_paywall",
       "category": "Paywalls",
       "access": "read",
-      "description": "Get a paywall by UUID or identifier: status, layouts, offering, colours and copy_outline — every text and button with its component id, for update_paywall patch.copy. include_config returns the full draft and published configs (large)."
+      "description": "Get a paywall by UUID or identifier: status, layouts, offering, colours and copy_outline — every text and button with its component id, current colours, whether users can see it (hidden, show_with) and whether a product list fills it (product_field), for update_paywall patch.copy, patch.colors and patch.visibility; and exits — whether a visitor can leave without buying, the header close/back icons with whether each closes or is hidden, and the patch (close_button, visibility) that fixes it. include_config returns the full draft and published configs (often hundreds of KB, too large for most agents: prefer copy_outline)."
     },
     {
       "name": "list_templates",
       "category": "Paywalls",
       "access": "read",
-      "description": "List available paywall and onboarding templates from the BillDog template catalog."
+      "description": "Use this to browse paywall templates by app category before building a paywall. List available paywall and onboarding templates from the BillDog template catalog."
     },
     {
       "name": "create_paywall_from_template",
       "category": "Paywalls",
       "access": "write",
-      "description": "Create a new paywall in the project from an existing template. Created as an inactive draft by default."
+      "description": "Use this to start a mobile app paywall from a paywall template. Create a new paywall in the project from an existing template. Created as an inactive draft by default. The result's exits says whether a visitor can leave without buying: most templates draw a header close or back icon that does nothing, or hide the close; exits.fix is the update_paywall patch that wires it."
     },
     {
       "name": "design_paywall",
       "category": "Paywalls",
       "access": "write",
-      "description": "Design a paywall and save it as an inactive draft. Two ways: (1) pass `recipe`: you design it yourself — a compact layout (theme, presentation, body nodes such as text, icon, feature-list, products, button) that BillDog compiles into a native paywall. Its JSON schema is below; read the resource billdog://docs/paywall-recipe for the full language and design guidance. Uses no AI credit. If it does not compile, the error lists every problem; fix them and call again. (2) pass `prompt`: BillDog's AI designer (the same one as the dashboard's \"Generate with AI\") writes the recipe from your description and the project's offering and store listing. Uses one of the user's AI credits, charged only when a design compiles. Never write prices in text: the `products` node shows each package's real store price. Pass offering_id so the plan picker binds to that offering."
+      "description": "Use this to generate a mobile app paywall from a description, or to build one from a layout you write. For a paywall inside the user's own app, not for reading paywalled articles. Design a paywall and save it as an inactive draft. Two ways: (1) pass `recipe`: you design it yourself — a compact layout (theme, presentation, body nodes such as text, icon, feature-list, products, button) that BillDog compiles into a native paywall. Its JSON schema is below; call get_paywall_recipe_guide for the full language and design guidance. Uses no AI credit. If it does not compile, the error lists every problem; fix them and call again. (2) pass `prompt`: BillDog's AI designer (the same one as the dashboard's \"Generate with AI\") writes the recipe from your description and the project's offering and store listing. Uses one of the user's AI credits, charged only when a design compiles. Never write prices in text: the `products` node shows each package's real store price. Pass offering_id so the plan picker binds to that offering."
     },
     {
       "name": "update_paywall",
       "category": "Paywalls",
       "access": "write",
-      "description": "Apply constrained patch updates to a paywall's draft (copy, title, subtitle, CTA text, brand colors, offering binding). On a published paywall this edits the draft only: users keep seeing the published version until publish_paywall."
+      "description": "Apply constrained patch updates to a paywall's draft (copy, title, subtitle, CTA text, brand colors, one element's colours, what is shown or hidden, offering binding, which button buys). On a published paywall this edits the draft only: users keep seeing the published version until publish_paywall."
     },
     {
       "name": "preview_paywall",
       "category": "Paywalls",
       "access": "read",
-      "description": "Evaluate paywall publish gate (validating components, bindings, offerings) and generate a secure short-lived preview link and token."
+      "description": "Evaluate paywall publish gate (validating components, bindings, offerings) and generate a secure short-lived preview link and token. store_warnings (when present) lists products a platform the project targets will not show because they have no App Store / Google Play product id; it does not block publishing."
     },
     {
       "name": "publish_paywall",
       "category": "Paywalls",
       "access": "write · publish",
-      "description": "Publish a draft paywall to make it active for SDK delivery. Validates paywall before publishing. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on. The approval publishes the draft as it was when you asked; edit it afterwards and you must ask again."
+      "description": "Publish a draft paywall to make it active for SDK delivery. Validates paywall before publishing. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on. The approval publishes the draft as it was when you asked; edit it afterwards and you must ask again. store_warnings (when present) lists products a platform the project targets will not show because they have no App Store / Google Play product id: tell the user, it does not block."
     },
     {
       "name": "unpublish_paywall",
       "category": "Paywalls",
       "access": "write · publish",
-      "description": "Deactivate an active paywall. On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
+      "description": "Deactivate an active paywall. Refused while a running experiment serves it (stop the experiment first). On a live project (a production purchase, or 10+ production customers, in the last 30 days; sample projects never count) the change waits for an owner or admin to approve it: the result is awaiting_approval with an approve_url to pass on."
     },
     {
       "name": "get_paywall_recipe_guide",
@@ -228,7 +228,7 @@
       "name": "create_experiment",
       "category": "Experiments & feature flags",
       "access": "write",
-      "description": "Create a paywall A/B experiment as a DRAFT: each variant shows a different paywall at the same place in the app. The first variant is the control unless one says is_control. Traffic splits evenly unless every variant gives traffic_percent (they must add up to 100). It serves nothing until start_experiment, and every paywall in it must be published first."
+      "description": "Use this to A/B test paywalls: compare two or more paywalls in an app. Create a paywall A/B experiment as a DRAFT: each variant shows a different paywall at the same place in the app. The first variant is the control unless one says is_control. Traffic splits evenly unless every variant gives traffic_percent (they must add up to 100). It serves nothing until start_experiment, and every paywall in it must be published first."
     },
     {
       "name": "start_experiment",
@@ -246,7 +246,7 @@
       "name": "get_experiment_results",
       "category": "Experiments & feature flags",
       "access": "read",
-      "description": "Per-variant results of an experiment for its whole run: users, conversions, conversion rate, revenue per user, lift vs control, p-value and significance (p < 0.05 with 100+ users per arm), plus a verdict: winner, loser, keep_running or no_data. Reads production unless sandbox is true."
+      "description": "Use this to read a paywall A/B test: conversion, revenue per user and which variant won. Per-variant results of an experiment for its whole run: users, conversions, conversion rate, revenue per user, lift vs control, p-value and significance (p < 0.05 with 100+ users per arm), plus a verdict: winner, loser, keep_running or no_data. Reads production unless sandbox is true."
     },
     {
       "name": "list_feature_flags",
@@ -258,7 +258,7 @@
       "name": "create_feature_flag",
       "category": "Experiments & feature flags",
       "access": "write",
-      "description": "Create a feature flag, OFF: every user gets false until update_feature_flag turns it on. The app reads it by key. For a multivariate flag give variants (2+, rollout_percentage adding up to 100, optional JSON payload each)."
+      "description": "Use this to add a feature flag for a mobile or web app. Create a feature flag, OFF: every user gets false until update_feature_flag turns it on. The app reads it by key. For a multivariate flag give variants (2+, rollout_percentage adding up to 100, optional JSON payload each)."
     },
     {
       "name": "update_feature_flag",
@@ -306,7 +306,7 @@
       "name": "create_survey",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Save a survey as a DRAFT with its questions (activate it in the dashboard). Questions are checked as the dashboard checks them: a choice question needs choices, a rating needs maxRating ≥ 1, a link needs config.url."
+      "description": "Use this to draft an in-app survey. Save a survey as a DRAFT with its questions (activate it in the dashboard). Questions are checked as the dashboard checks them: a choice question needs choices, a rating needs maxRating ≥ 1, a link needs config.url."
     },
     {
       "name": "list_campaigns",
@@ -330,7 +330,19 @@
       "name": "create_journey",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Save a linear journey as a DRAFT (activate it in the dashboard; branches are built on its canvas). entry_trigger.trigger is one of: signup, app_open, paywall_presented, paywall_dismissed, paywall_purchased, trial_start, trial_ending, subscription_created, subscription_renewed, subscription_cancelled, subscription_expired, billing_issue, survey_completed, inactivity, segment_entered, or custom_event with event_name."
+      "description": "Save a linear journey as a DRAFT (activate it with activate_journey or in the dashboard; branches are built on its canvas). entry_trigger.trigger is one of: signup, app_open, paywall_presented, paywall_dismissed, paywall_purchased, trial_start, trial_ending, subscription_created, subscription_renewed, subscription_cancelled, subscription_expired, billing_issue, survey_completed, inactivity, segment_entered, or custom_event with event_name."
+    },
+    {
+      "name": "activate_journey",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "write · publish",
+      "description": "Activate a draft or paused journey so new matching events enroll customers. Refused when the journey has no entry trigger, no steps, or a present_paywall step whose placement this project does not have. On a live project, or one that requires approval for every agent change, this does not activate it: it files an approval request for a project owner or admin and returns approve_url; once approved, BillDog activates it exactly as asked (do not call again). Needs the \"Publish and go live\" permission."
+    },
+    {
+      "name": "pause_journey",
+      "category": "Engagement: surveys, campaigns, journeys, messages",
+      "access": "write",
+      "description": "Pause an active journey: nobody new enters. Never needs approval (stopping must always work). People already in it are held where they are and continue when it is activated again."
     },
     {
       "name": "list_message_templates",
@@ -342,7 +354,7 @@
       "name": "create_message_template",
       "category": "Engagement: surveys, campaigns, journeys, messages",
       "access": "write",
-      "description": "Save a reusable push or in-app message template (the same kind the dashboard Templates library shows). Use its id as template_id in a journey step."
+      "description": "Use this to write a reusable push notification or in-app message. Save a reusable push or in-app message template (the same kind the dashboard Templates library shows). Use its id as template_id in a journey step."
     }
   ]
 }
