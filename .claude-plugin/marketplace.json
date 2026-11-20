@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "BillDog for AI coding agents: paywalls, subscriptions, analytics, messaging and surveys.",
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "plugins": [
     {
       "name": "billdog",
       "source": "./",
       "description": "Wire BillDog into an app and set up or inspect a project over MCP: products, entitlements, offerings, placements, paywalls, analytics, surveys and journeys.",
-      "version": "1.4.1",
+      "version": "1.4.2",
       "category": "development",
       "homepage": "https://billdog.io/docs/mcp-server",
       "keywords": [
