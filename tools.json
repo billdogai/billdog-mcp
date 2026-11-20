@@ -1,6 +1,6 @@
 {
   "server": "https://api.billdog.io/mcp",
-  "count": 59,
+  "count": 60,
   "tools": [
     {
       "name": "get_setup_status",
@@ -120,13 +120,13 @@
       "name": "update_entitlement",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Update display name, description, or linked products for an existing entitlement. product_ids REPLACES the list. On a live project, a change that removes a product (its buyers lose the entitlement) waits for an owner or admin to approve."
+      "description": "Update display name, description, or linked products for an existing entitlement. product_ids REPLACES the list. On a live project, a change to its products waits for an owner or admin to approve: removing one takes the entitlement from its buyers, adding one gives it to them."
     },
     {
       "name": "set_entitlement_products",
       "category": "Catalog: products, entitlements, offerings, placements",
       "access": "write",
-      "description": "Set the explicit list of product IDs granting an entitlement (replaces the list; only the links that change are touched). On a live project, removing a product (its buyers lose the entitlement) waits for an owner or admin to approve."
+      "description": "Set the explicit list of product IDs granting an entitlement (replaces the list; only the links that change are touched). On a live project, a change to its products waits for an owner or admin to approve: removing one takes the entitlement from its buyers, adding one gives it to them."
     },
     {
       "name": "create_offering",
@@ -282,13 +282,19 @@
       "name": "create_project",
       "category": "Projects & SDK keys",
       "access": "write",
-      "description": "Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform. With the \"Create projects\" permission (Sign in with BillDog), this connection then works in the new project: every other tool acts on it, and use_project switches back. Otherwise the connection stays on its current project and the result says how to reconnect — do not configure the new project until then. Check result.connection.switched."
+      "description": "Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform. One project is one app: the project this connection was given (often one the user created while connecting) is usually already theirs for this app, so check get_project first and create another only for a separate app or when the user asks. With the \"Create projects\" permission (Sign in with BillDog), this connection then works in the new project: every other tool acts on it, and use_project switches back. Otherwise the connection stays on its current project and the result says how to reconnect — do not configure the new project until then. Check result.connection.switched."
     },
     {
       "name": "create_public_sdk_key",
       "category": "Projects & SDK keys",
       "access": "write",
       "description": "Generate a client-safe public SDK key (bd_public_live_... or bd_public_test_...) for mobile and web apps. Never mints secret keys."
+    },
+    {
+      "name": "add_app",
+      "category": "Projects & SDK keys",
+      "access": "write",
+      "description": "Use this to record an app's iOS bundle ID, Android package name or web domain in the connected project. Record the app this project is for: its iOS bundle ID, Android package name or web domain, one per platform. Store verification, product import and the store's purchase notifications are matched against it. Ask the user for the exact identifier (Xcode → target → Bundle Identifier; build.gradle → applicationId) and never invent or guess one. An app already recorded is changed by the user on the dashboard's Apps tab."
     },
     {
       "name": "use_project",
@@ -341,8 +347,8 @@
     {
       "name": "pause_journey",
       "category": "Engagement: surveys, campaigns, journeys, messages",
-      "access": "write",
-      "description": "Pause an active journey: nobody new enters. Never needs approval (stopping must always work). People already in it are held where they are and continue when it is activated again."
+      "access": "write · publish",
+      "description": "Pause an active journey: nobody new enters, and people already in it are held where they are until it is activated again. Needs the \"Publish and go live\" permission. On a live project it does not pause at once: it files an approval request for a project owner or admin and returns approve_url (the \"always require approval\" setting alone never holds a pause)."
     },
     {
       "name": "list_message_templates",

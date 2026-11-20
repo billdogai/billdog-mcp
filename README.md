@@ -19,7 +19,7 @@
 
 [BillDog](https://billdog.io) is paywalls, in-app purchases, subscriptions, analytics, messaging, surveys and journeys behind one SDK for iOS, Android, React Native, Flutter, Expo and the web. This repository is how AI agents connect to it:
 
-- **A hosted MCP server.** 59 tools: diagnose an integration, build the product catalog, design and publish paywalls, and query revenue and retention.
+- **A hosted MCP server.** 60 tools: diagnose an integration, record the app's bundle ID and package name, build the product catalog, design and publish paywalls, and query revenue and retention.
 - **Plugins for Claude Code, Cursor and Antigravity.** The server plus five skills: wiring the SDK into an app, custom (headless) paywall UI, paywall A/B experiments and feature flags, revenue and conversion analysis, and migrating from RevenueCat, Superwall, Adapty and others.
 
 Nothing runs on your machine. The server is hosted by BillDog and every client connects to the same URL.
@@ -128,7 +128,7 @@ claude mcp add --transport http billdog https://api.billdog.io/mcp \
 
 ## Tools
 
-**29 read** · **28 write** · *publish* means it changes what live users see and needs the publish permission.
+**29 read** · **31 write** · *publish* means it changes what live users see and needs the publish permission. On a live project (or one set to always require approval), those changes and any change to an entitlement's products are not applied: the tool returns an `approve_url`, the project's owners and admins are emailed, and an owner or admin approves it in the dashboard.
 Machine-readable list: [`tools.json`](tools.json).
 
 ### Setup & diagnostics
@@ -164,8 +164,8 @@ Machine-readable list: [`tools.json`](tools.json).
 | `create_product` | write | Create a store product (subscription or in-app purchase) in the project catalog. |
 | `update_product` | write | Update metadata, store IDs, or display pricing for an existing product in this project. |
 | `create_entitlement` | write | Create a new entitlement in the catalog and optionally link it to products. |
-| `update_entitlement` | write | Update display name, description, or linked products for an existing entitlement (product_ids replaces the list). |
-| `set_entitlement_products` | write | Set the explicit list of product IDs granting an entitlement (replaces the list; only the links that change are touched). |
+| `update_entitlement` | write | Update display name, description, or linked products for an existing entitlement (product_ids replaces the list). On a live project a change to its products waits for approval. |
+| `set_entitlement_products` | write | Set the explicit list of product IDs granting an entitlement (replaces the list; only the links that change are touched). On a live project it waits for approval. |
 | `create_offering` | write | Create a new offering with packages. |
 | `manage_offering_packages` | write | Add or remove packages within an existing offering. |
 | `set_current_offering` | write · publish | Make an offering the project current offering (the others stop being current, atomically). |
@@ -208,6 +208,7 @@ Machine-readable list: [`tools.json`](tools.json).
 | `list_projects` | read | List all BillDog projects accessible to the authenticated user, identifying the current active project, bundle ID, and platform. |
 | `create_project` | write | Create a new BillDog project for the authenticated user with a specified name, bundle ID, and platform. |
 | `create_public_sdk_key` | write | Generate a client-safe public SDK key (bd_public_live_... or bd_public_test_...) for mobile and web apps. |
+| `add_app` | write | Record the app's iOS bundle ID, Android package name or web domain, one per platform, exactly as the user gives it. An app already recorded is changed on the dashboard's Apps tab; not available on a live project. |
 | `use_project` | write | Switch this connection to another project it may use: the project chosen when it was connected, or one it created with create_project. |
 
 ### Engagement: surveys, campaigns, journeys, messages
@@ -221,7 +222,7 @@ Machine-readable list: [`tools.json`](tools.json).
 | `list_journeys` | read | List all customer onboarding and engagement journeys with their sequence of steps. |
 | `create_journey` | write | Save a linear journey as a DRAFT (activate it with activate_journey or in the dashboard; branches are built on its canvas). |
 | `activate_journey` | write · publish | Activate a draft or paused journey so new matching events enroll customers. On a live project it files an approval request for an owner or admin instead. |
-| `pause_journey` | write | Pause an active journey: nobody new enters, and people already in it are held where they are. Never needs approval. |
+| `pause_journey` | write · publish | Pause an active journey: nobody new enters, and people already in it are held where they are. On a live project it files an approval request instead. |
 | `list_message_templates` | read | List the project's message templates (push, in-app, email, SMS) with their title and body, as the dashboard Templates library shows them. |
 | `create_message_template` | write | Save a reusable push or in-app message template (the same kind the dashboard Templates library shows). |
 ## Permissions & safety
@@ -292,7 +293,7 @@ skills/                           billdog-integration, billdog-migration, billdo
 server.json                       official MCP Registry entry
 smithery.yaml                     Smithery (stdio bridge via mcp-remote)
 glama.json                        Glama ownership claim
-tools.json                        all 59 tools, grouped, with access level
+tools.json                        all 60 tools, grouped, with access level
 .antigravity-plugin/plugin.json   Antigravity plugin manifest (takes precedence over plugin.json in Antigravity)
 mcp_config.json                   Antigravity MCP config
 rules/AGENTS.md                   Antigravity always-on rule

@@ -102,12 +102,25 @@ project and whether you may only read, or also create and publish.
 - **Inspect instead of asking:** `get_setup_status`, `list_products`,
   `list_entitlements`, `list_offerings`, `list_paywalls`, `list_placements`,
   `resolve_placement_preview`, `get_recent_sdk_activity`.
+- **Record the app first:** ask the user for the exact iOS bundle ID (Xcode →
+  target → Bundle Identifier) and Android package name (`applicationId` in
+  Gradle), never guess one, then record each with `add_app`. One app per
+  platform; an app already recorded is changed on the dashboard's Apps tab. Store
+  keys (App Store Connect, Google Play) are entered only in the dashboard, under
+  Project Settings → Store; that also verifies the app and imports its products.
 - **Set up the catalog:** prefer one `apply_setup_plan` call over many single
-  writes. New products, offerings and placements start inactive.
+  writes, with a dry run first. New products, offerings and placements start
+  inactive. A paywall in the plan with no template or recipe is a plain starter
+  with no feature claims; design it with `design_paywall`.
 - **Paywalls:** `list_templates` → `create_paywall_from_template` or
   `design_paywall` → `update_paywall` → `preview_paywall` → `publish_paywall`.
   Publishing and anything that changes what live users see needs the publish
   permission; ask the user before you do it.
+- **Approvals:** on a live project (or one set to always require approval), a
+  change that reaches users is not applied. The result says
+  `awaiting_approval` with an `approve_url`: give the user that link, say the
+  project's owners and admins were emailed, and do not call the tool again.
+  Approving applies exactly what was asked.
 
 Customer contact details are never returned.
 
